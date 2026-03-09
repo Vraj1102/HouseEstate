@@ -39,7 +39,8 @@ export default function Signin() {
         return;
       }
       dispatch(signInSuccess(data));
-      // Redirect admin users to admin panel, regular users to home
+      // Scroll to top and redirect
+      window.scrollTo(0, 0);
       if (data.role === "admin") {
         navigate("/admin");
       } else {

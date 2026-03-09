@@ -25,62 +25,62 @@ export default function Header() {
   }, [location.search]);
 
   return (
-    <header className="bg-white shadow-lg border-b border-gray-200">
+    <header className="bg-gradient-to-r from-primary-900 to-primary-800 shadow-lg">
       <div className="flex justify-between items-center max-w-7xl mx-auto px-4 py-4">
         {/* Logo */}
         <Link to="/" className="flex items-center space-x-2 group">
-          <FaHome className="text-2xl text-blue-600 group-hover:text-blue-700 transition-colors" />
+          <FaHome className="text-2xl text-accent-500 group-hover:text-accent-600 transition-colors" />
           <h1 className="font-bold text-xl sm:text-2xl">
-            <span className="text-blue-600">House</span>
-            <span className="text-gray-800">Estate</span>
+            <span className="text-white">House</span>
+            <span className="text-accent-500">Estate</span>
           </h1>
         </Link>
 
         {/* Search Bar */}
         <form
           onSubmit={handleSubmit}
-          className="hidden md:flex bg-gray-50 border border-gray-200 rounded-full px-4 py-2 items-center hover:shadow-md transition-shadow"
+          className="hidden md:flex bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 items-center hover:bg-white/20 transition-all"
         >
           <input
             type="text"
             placeholder="Search properties..."
-            className="bg-transparent focus:outline-none w-64 text-gray-700 placeholder-gray-500"
+            className="bg-transparent focus:outline-none w-64 text-white placeholder-white/70"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
           <button type="submit" className="ml-2">
-            <FaSearch className="text-gray-600 hover:text-blue-600 transition-colors" />
+            <FaSearch className="text-white hover:text-accent-500 transition-colors" />
           </button>
         </form>
 
         {/* Navigation */}
         <nav className="flex items-center space-x-6">
-          <Link to="/" className="hidden sm:flex items-center space-x-1 text-gray-700 hover:text-blue-600 transition-colors font-medium">
+          <Link to="/" className="hidden sm:flex items-center space-x-1 text-white hover:text-accent-500 transition-colors font-medium">
             <FaHome className="text-sm" />
             <span>Home</span>
           </Link>
-          <Link to="/about" className="hidden sm:flex items-center space-x-1 text-gray-700 hover:text-blue-600 transition-colors font-medium">
+          <Link to="/about" className="hidden sm:flex items-center space-x-1 text-white hover:text-accent-500 transition-colors font-medium">
             <span>About</span>
           </Link>
           
           {currentUser && currentUser.role === "admin" && (
-            <Link to="/admin" className="hidden sm:flex items-center space-x-1 text-gray-700 hover:text-red-600 transition-colors font-medium">
+            <Link to="/admin" className="hidden sm:flex items-center space-x-1 text-white hover:text-red-400 transition-colors font-medium">
               <span>Admin</span>
             </Link>
           )}
           
           <Link to="/profile">
             {currentUser ? (
-              <div className="flex items-center space-x-2 bg-blue-50 hover:bg-blue-100 rounded-full px-3 py-2 transition-colors">
+              <div className="flex items-center space-x-2 bg-white/10 hover:bg-white/20 rounded-full px-3 py-2 transition-colors border border-white/20">
                 <img
-                  className="rounded-full h-8 w-8 object-cover border-2 border-blue-200"
+                  className="rounded-full h-8 w-8 object-cover border-2 border-accent-500"
                   src={currentUser.avatar}
                   alt="profile"
                 />
-                <span className="hidden sm:block text-gray-700 font-medium">{currentUser.username}</span>
+                <span className="hidden sm:block text-white font-medium">{currentUser.username}</span>
               </div>
             ) : (
-              <div className="flex items-center space-x-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full transition-colors font-medium">
+              <div className="flex items-center space-x-1 bg-accent-600 hover:bg-accent-500 text-white px-4 py-2 rounded-full transition-colors font-medium">
                 <FaSignInAlt className="text-sm" />
                 <span>Sign In</span>
               </div>
@@ -91,16 +91,16 @@ export default function Header() {
       
       {/* Mobile Search */}
       <div className="md:hidden px-4 pb-4">
-        <form onSubmit={handleSubmit} className="flex bg-gray-50 border border-gray-200 rounded-full px-4 py-2 items-center">
+        <form onSubmit={handleSubmit} className="flex bg-white/10 border border-white/20 rounded-full px-4 py-2 items-center">
           <input
             type="text"
             placeholder="Search properties..."
-            className="bg-transparent focus:outline-none flex-1 text-gray-700 placeholder-gray-500"
+            className="bg-transparent focus:outline-none flex-1 text-white placeholder-white/70"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
           <button type="submit">
-            <FaSearch className="text-gray-600" />
+            <FaSearch className="text-white" />
           </button>
         </form>
       </div>

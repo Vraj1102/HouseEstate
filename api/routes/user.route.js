@@ -2,7 +2,8 @@ import express from "express";
 import {
   test,
   updateUser,
-  deleteUser,
+  sendDeleteAccountOTP,
+  verifyOTPAndDeleteAccount,
   getUserListings,
   getUser,
 } from "../controllers/userController.js";
@@ -12,7 +13,8 @@ const router = express.Router();
 
 router.get("/test", test);
 router.post("/update/:id", verifyToken, updateUser);
-router.delete("/delete/:id", verifyToken, deleteUser);
+router.post("/send-delete-otp/:id", verifyToken, sendDeleteAccountOTP);
+router.post("/verify-delete-otp/:id", verifyToken, verifyOTPAndDeleteAccount);
 router.get("/listings/:id", verifyToken, getUserListings);
 router.get("/:id", verifyToken, getUser);
 

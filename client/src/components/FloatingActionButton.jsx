@@ -1,32 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { FaArrowUp, FaPhone, FaEnvelope, FaWhatsapp, FaPlus, FaTimes } from 'react-icons/fa';
+import React, { useState } from 'react';
+import { FaPhone, FaEnvelope, FaWhatsapp, FaPlus, FaTimes } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 export default function FloatingActionButton() {
-  const [showScrollTop, setShowScrollTop] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 300);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
 
   const handleCall = () => {
     window.open('tel:+1234567890', '_self');
   };
 
   const handleEmail = () => {
-    window.open('mailto:info@vrgroup.com', '_self');
+    window.open('mailto:info@houseestate.com', '_self');
   };
 
   const handleWhatsApp = () => {
@@ -36,19 +22,9 @@ export default function FloatingActionButton() {
   return (
     <div className="fixed bottom-6 right-6 z-40">
       <div className={`flex flex-col space-y-3 mb-4 transition-all duration-300 ${isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}>
-        {showScrollTop && (
-          <button
-            onClick={scrollToTop}
-            className="bg-gray-600 hover:bg-gray-700 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover-lift"
-            title="Scroll to top"
-          >
-            <FaArrowUp className="text-lg" />
-          </button>
-        )}
-
         <button
           onClick={handleWhatsApp}
-          className="bg-green-500 hover:bg-green-600 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover-lift"
+          className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover-lift"
           title="Chat on WhatsApp"
         >
           <FaWhatsapp className="text-lg" />
@@ -56,7 +32,7 @@ export default function FloatingActionButton() {
 
         <button
           onClick={handleEmail}
-          className="bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover-lift"
+          className="bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover-lift"
           title="Send Email"
         >
           <FaEnvelope className="text-lg" />
@@ -64,7 +40,7 @@ export default function FloatingActionButton() {
 
         <button
           onClick={handleCall}
-          className="bg-purple-500 hover:bg-purple-600 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover-lift"
+          className="bg-gradient-to-r from-accent-500 to-accent-600 hover:from-accent-600 hover:to-accent-700 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover-lift"
           title="Call Us"
         >
           <FaPhone className="text-lg" />
@@ -73,7 +49,7 @@ export default function FloatingActionButton() {
         {currentUser && (
           <Link
             to="/create-listing"
-            className="bg-orange-500 hover:bg-orange-600 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover-lift flex items-center justify-center"
+            className="bg-gradient-to-r from-success-500 to-success-600 hover:from-success-600 hover:to-success-700 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover-lift flex items-center justify-center"
             title="Create Listing"
           >
             <FaPlus className="text-lg" />
@@ -83,7 +59,7 @@ export default function FloatingActionButton() {
 
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover-lift animate-pulse-glow ${
+        className={`bg-gradient-to-r from-primary-600 to-accent-600 hover:from-primary-700 hover:to-accent-700 text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover-lift ${
           isOpen ? 'rotate-45' : 'rotate-0'
         }`}
         title="Quick Actions"
@@ -92,17 +68,17 @@ export default function FloatingActionButton() {
       </button>
 
       {isOpen && (
-        <div className="absolute bottom-full right-0 mb-4 bg-white rounded-lg shadow-xl p-4 w-64 animate-fade-in">
+        <div className="absolute bottom-full right-0 mb-4 bg-white rounded-lg shadow-xl p-4 w-64 animate-fade-in border border-gray-200">
           <div className="text-sm text-gray-800">
-            <h4 className="font-semibold mb-2 text-blue-600">Contact VR Group</h4>
+            <h4 className="font-semibold mb-2 text-primary-600">Contact HouseEstate</h4>
             <div className="space-y-2">
               <div className="flex items-center space-x-2">
-                <FaPhone className="text-purple-500" />
+                <FaPhone className="text-accent-500" />
                 <span>+1 (555) 123-4567</span>
               </div>
               <div className="flex items-center space-x-2">
-                <FaEnvelope className="text-blue-500" />
-                <span>info@vrgroup.com</span>
+                <FaEnvelope className="text-primary-600" />
+                <span>info@houseestate.com</span>
               </div>
               <div className="flex items-center space-x-2">
                 <FaWhatsapp className="text-green-500" />

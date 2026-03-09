@@ -54,6 +54,15 @@ const listingSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    paymentStatus: {
+      type: String,
+      enum: ["available", "token_paid", "sold"],
+      default: "available",
+    },
+    paidBy: {
+      type: String,
+      default: null,
+    },
   },
   { timestamps: true }
 );

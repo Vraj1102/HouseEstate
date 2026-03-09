@@ -7,17 +7,19 @@ export default function ForgotPassword() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-  const [resetToken, setResetToken] = useState("");
+  const [otp, setOtp] = useState("");
+  const [displayOTP, setDisplayOTP] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  const [step, setStep] = useState(1); // 1: email, 2: reset
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [step, setStep] = useState(1); // 1: email, 2: otp & password, 3: success
 
-  const handleForgotPassword = async (e) => {
+  const handleSendOTP = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
     
     try {
-      const res = await fetch("/api/auth/forgot-password", {
+      const res = await fetch("/api/auth/send-reset-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
@@ -25,8 +27,10 @@ export default function ForgotPassword() {
       const data = await res.json();
       
       if (res.ok) {
-        setMessage("Reset token generated! Use the token below to reset your password.");
-        setResetToken(data.resetToken);
+        setMessage(data.message || "OTP sent to your email! Please check your inbox.");
+        if (data.otp) {
+          setDisplayOTP(data.otp);
+        }
         setStep(2);
       } else {
         setError(data.message);
@@ -42,11 +46,23 @@ export default function ForgotPassword() {
     setLoading(true);
     setError("");
     
+    if (newPassword !== confirmPassword) {
+      setError("Passwords do not match!");
+      setLoading(false);
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      setError("Password must be at least 6 characters!");
+      setLoading(false);
+      return;
+    }
+    
     try {
-      const res = await fetch("/api/auth/reset-password", {
+      const res = await fetch("/api/auth/verify-otp-reset-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token: resetToken, newPassword }),
+        body: JSON.stringify({ email, otp, newPassword }),
       });
       const data = await res.json();
       
@@ -75,11 +91,11 @@ export default function ForgotPassword() {
             </h1>
           </div>
           <h2 className="text-2xl font-bold text-gray-800 mb-2">
-            {step === 1 ? "Forgot Password" : step === 2 ? "Reset Password" : "Success"}
+            {step === 1 ? "Forgot Password" : step === 2 ? "Verify OTP" : "Success"}
           </h2>
           <p className="text-gray-600">
-            {step === 1 ? "Enter your email to receive a reset token" : 
-             step === 2 ? "Enter the token and your new password" : 
+            {step === 1 ? "Enter your email to receive an OTP" : 
+             step === 2 ? "Enter the OTP sent to your email and set new password" : 
              "Your password has been reset successfully"}
           </p>
         </div>
@@ -87,7 +103,7 @@ export default function ForgotPassword() {
         {/* Form Card */}
         <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
           {step === 1 && (
-            <form onSubmit={handleForgotPassword} className="space-y-6">
+            <form onSubmit={handleSendOTP} className="space-y-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Email Address
@@ -114,7 +130,7 @@ export default function ForgotPassword() {
                 ) : (
                   <>
                     <FaKey />
-                    <span>Send Reset Token</span>
+                    <span>Send OTP</span>
                   </>
                 )}
               </button>
@@ -123,27 +139,25 @@ export default function ForgotPassword() {
 
           {step === 2 && (
             <div className="space-y-6">
-              {/* Display Token */}
-              <div className="bg-gray-50 p-4 rounded-lg border">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Your Reset Token (Copy this):
-                </label>
-                <div className="bg-white p-3 rounded border font-mono text-sm break-all">
-                  {resetToken}
+              {displayOTP && (
+                <div className="bg-yellow-50 border-2 border-yellow-400 rounded-lg p-4">
+                  <p className="text-sm text-yellow-800 font-semibold mb-2">Development Mode - Your OTP:</p>
+                  <p className="text-3xl font-bold text-yellow-900 text-center tracking-widest">{displayOTP}</p>
+                  <p className="text-xs text-yellow-700 mt-2 text-center">Copy this OTP to verify</p>
                 </div>
-              </div>
-
+              )}
               <form onSubmit={handleResetPassword} className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Reset Token
+                    Enter OTP
                   </label>
                   <input
                     type="text"
-                    placeholder="Paste the reset token here"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                    value={resetToken}
-                    onChange={(e) => setResetToken(e.target.value)}
+                    placeholder="Enter 6-digit OTP"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-center text-2xl tracking-widest"
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value)}
+                    maxLength="6"
                     required
                   />
                 </div>
@@ -162,8 +176,22 @@ export default function ForgotPassword() {
                   />
                 </div>
 
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Confirm Password
+                  </label>
+                  <input
+                    type="password"
+                    placeholder="Confirm your new password"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                  />
+                </div>
+
                 <button
-                  disabled={loading}
+                  disabled={loading || otp.length !== 6}
                   className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white py-3 rounded-lg font-semibold text-lg hover:from-green-700 hover:to-emerald-700 focus:ring-4 focus:ring-green-200 transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
                 >
                   {loading ? (
@@ -222,7 +250,7 @@ export default function ForgotPassword() {
         {/* Footer */}
         <div className="text-center mt-8">
           <p className="text-gray-500 text-sm">
-            © {new Date().getFullYear()} VR Group. All rights reserved.
+            © {new Date().getFullYear()} HouseEstate. All rights reserved.
           </p>
         </div>
       </div>

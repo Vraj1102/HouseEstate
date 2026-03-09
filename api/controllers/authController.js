@@ -2,6 +2,8 @@ import User from "../models/User.model.js";
 import bcryptjs from "bcryptjs";
 import { errorHandler } from "../utils/error.js";
 import jwt from "jsonwebtoken";
+import OTP from "../models/OTP.model.js";
+import { sendOTPEmail } from "../utils/emailService.js";
 
 export const signup = async (req, res, next) => {
   const { username, email, password } = req.body;
@@ -78,40 +80,52 @@ export const signout = async (req, res, next) => {
   }
 };
 
-export const forgotPassword = async (req, res, next) => {
+export const sendPasswordResetOTP = async (req, res, next) => {
   try {
     const { email } = req.body;
     const user = await User.findOne({ email });
     if (!user) return next(errorHandler(404, "User not found!"));
     
-    const resetToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
     
-    res.status(200).json({ 
-      message: "Password reset token generated", 
-      resetToken,
-      email: user.email 
-    });
+    await OTP.deleteMany({ email, type: 'password_reset' });
+    await OTP.create({ email, otp, type: 'password_reset' });
+    
+    // Try to send email, but don't fail if email service is not configured
+    try {
+      await sendOTPEmail(email, otp, 'password_reset');
+      res.status(200).json({ message: "OTP sent to your email", otp: process.env.NODE_ENV === 'development' ? otp : undefined });
+    } catch (emailError) {
+      console.error('Email service error:', emailError.message);
+      // In development, return OTP in response if email fails
+      if (process.env.NODE_ENV === 'development') {
+        res.status(200).json({ message: "Email service unavailable. Your OTP is", otp });
+      } else {
+        return next(errorHandler(500, "Failed to send OTP. Please contact support."));
+      }
+    }
   } catch (err) {
     next(err);
   }
 };
 
-export const resetPassword = async (req, res, next) => {
+export const verifyOTPAndResetPassword = async (req, res, next) => {
   try {
-    const { token, newPassword } = req.body;
+    const { email, otp, newPassword } = req.body;
     
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.id);
+    const otpRecord = await OTP.findOne({ email, otp, type: 'password_reset' });
+    if (!otpRecord) return next(errorHandler(400, "Invalid or expired OTP!"));
+    
+    const user = await User.findOne({ email });
     if (!user) return next(errorHandler(404, "User not found!"));
     
     const hashPassword = bcryptjs.hashSync(newPassword, 10);
     await User.findByIdAndUpdate(user._id, { password: hashPassword });
     
+    await OTP.deleteMany({ email, type: 'password_reset' });
+    
     res.status(200).json("Password reset successfully!");
   } catch (err) {
-    if (err.name === 'TokenExpiredError') {
-      return next(errorHandler(400, "Reset token has expired!"));
-    }
     next(err);
   }
 };

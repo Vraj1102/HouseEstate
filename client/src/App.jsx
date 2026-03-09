@@ -11,11 +11,13 @@ import UpdateListing from "./pages/UpdateListing";
 import Search from "./pages/Search";
 import About from "./pages/About";
 import AdminPanel from "./pages/AdminPanel";
+import Payment from "./pages/Payment";
 import Header from "./components/Header";
 import Footers from "./components/Footers";
 import PrivateRoute from "./components/PrivateRoute";
 import AdminRoute from "./components/AdminRoute";
 import FloatingActionButton from "./components/FloatingActionButton";
+import ScrollToTop from "./components/ScrollToTop";
 
 function AppContent() {
   const location = useLocation();
@@ -23,6 +25,7 @@ function AppContent() {
 
   return (
     <>
+      <ScrollToTop />
       {!isAdminRoute && <Header />}
       
       <Routes>
@@ -40,6 +43,7 @@ function AppContent() {
             path="/update-listing/:listingId"
             element={<UpdateListing />}
           />
+          <Route path="/payment/:listingId" element={<Payment />} />
         </Route>
         <Route element={<AdminRoute />}>
           <Route path="/admin" element={<AdminPanel />} />
