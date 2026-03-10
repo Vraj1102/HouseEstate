@@ -23,7 +23,12 @@ dist-ssr
 *.sln
 *.sw?
 .env
+.env.local
 
-#api
-serviceAccountKey.json
-firebase.api
+#Client
+client/.env
+client/.env.local
+
+#api Never commit these files 
+api/serviceAccountKey.json
+client/src/firebase.js
