@@ -17,11 +17,12 @@ export default function CreateListing() {
     imageUrls: [],
     name: "",
     description: "",
+    longDescription: "",
     address: "",
     type: "rent",
     bedrooms: 1,
     bathrooms: 1,
-    regularPrice: 50,
+    regularPrice: 5000,
     discountPrice: 0,
     offer: false,
     parking: false,
@@ -177,12 +178,19 @@ export default function CreateListing() {
           />
           <textarea
             type="text"
-            placeholder="Description"
+            placeholder="Short Description"
             className="border p-3 rounded-lg"
             id="description"
             required
             onChange={handleChange}
             value={formData.description}
+          />
+          <textarea
+            placeholder="Long Description (Detailed property information)"
+            className="border p-3 rounded-lg h-32"
+            id="longDescription"
+            onChange={handleChange}
+            value={formData.longDescription}
           />
           <input
             type="text"
@@ -279,17 +287,15 @@ export default function CreateListing() {
                 type="number"
                 className="p-3 border border-gray-300 rounded-lg"
                 id="regularPrice"
-                min="50"
-                max="100000000"
+                min="5000"
+                max="1000000000"
                 required
                 onChange={handleChange}
                 value={formData.regularPrice}
               />
               <div className="flex flex-col items-center">
                 <p>Regular Price</p>
-                <span className="text-xs">
-                  (<span>&#8377;</span> / month)
-                </span>
+                <span className="text-xs">(₹ / month)</span>
               </div>
             </div>
 
@@ -307,9 +313,7 @@ export default function CreateListing() {
                 />
                 <div className="flex flex-col items-center">
                   <p>Discounted Price</p>
-                  <span className="text-xs">
-                    (<span>&#8377;</span> / month)
-                  </span>
+                  <span className="text-xs">(₹ / month)</span>
                 </div>
               </div>
             )}

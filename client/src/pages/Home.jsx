@@ -161,7 +161,7 @@ export default function Home() {
                     </h3>
                     <p className="text-lg md:text-xl text-gray-200">{listing.address}</p>
                     <div className="text-3xl md:text-4xl font-bold text-yellow-400">
-                      ${listing.regularPrice.toLocaleString()}
+                      ₹{listing.regularPrice.toLocaleString('en-IN')}
                       {listing.type === 'rent' && <span className="text-2xl text-gray-300">/month</span>}
                     </div>
                     <Link

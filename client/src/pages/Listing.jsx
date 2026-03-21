@@ -129,12 +129,12 @@ export default function Listing() {
               </div>
               <div className="flex items-center gap-4 mb-6">
                 <span className="text-3xl font-bold text-primary-600">
-                  ${listing.offer ? listing.discountPrice.toLocaleString() : listing.regularPrice.toLocaleString()}
+                  ₹{listing.offer ? listing.discountPrice.toLocaleString('en-IN') : listing.regularPrice.toLocaleString('en-IN')}
                   {listing.type === "rent" && <span className="text-lg text-gray-500"> / month</span>}
                 </span>
                 {listing.offer && (
                   <span className="bg-success-500 text-white px-4 py-2 rounded-full text-sm font-semibold">
-                    ${(listing.regularPrice - listing.discountPrice).toLocaleString()} OFF
+                    ₹{(listing.regularPrice - listing.discountPrice).toLocaleString('en-IN')} OFF
                   </span>
                 )}
               </div>
@@ -162,7 +162,7 @@ export default function Listing() {
                   <li>• {listing.parking ? "Dedicated parking space included" : "Street parking available"}</li>
                   <li>• {listing.furnished ? "Fully furnished with modern amenities" : "Unfurnished - customize to your taste"}</li>
                   <li>• Property status: <span className="font-semibold">{listing.paymentStatus === "available" ? "Available for booking" : listing.paymentStatus === "token_paid" ? "Reserved - Token paid" : "Sold"}</span></li>
-                  {listing.offer && <li>• Special discount offer active - Save ${(listing.regularPrice - listing.discountPrice).toLocaleString()}!</li>}
+                  {listing.offer && <li>• Special discount offer active - Save ₹{(listing.regularPrice - listing.discountPrice).toLocaleString('en-IN')}!</li>}
                 </ul>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">

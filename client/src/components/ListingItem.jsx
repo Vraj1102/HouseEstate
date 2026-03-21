@@ -102,14 +102,14 @@ export default function ListingItem({ listing }) {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-2xl font-bold text-gray-800">
-                ${listing.offer
-                  ? listing.discountPrice.toLocaleString()
-                  : listing.regularPrice.toLocaleString()}
+                ₹{listing.offer
+                  ? listing.discountPrice.toLocaleString('en-IN')
+                  : listing.regularPrice.toLocaleString('en-IN')}
                 {listing.type === "rent" && <span className="text-sm font-normal text-gray-600">/month</span>}
               </p>
               {listing.offer && (
                 <p className="text-sm text-gray-500 line-through">
-                  ${listing.regularPrice.toLocaleString()}
+                  ₹{listing.regularPrice.toLocaleString('en-IN')}
                 </p>
               )}
             </div>

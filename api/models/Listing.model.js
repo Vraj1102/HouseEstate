@@ -10,6 +10,10 @@ const listingSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    longDescription: {
+      type: String,
+      default: "",
+    },
     address: {
       type: String,
       required: true,

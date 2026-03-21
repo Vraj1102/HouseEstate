@@ -34,12 +34,36 @@ export default function Payment() {
 
   if (success) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="bg-white p-8 rounded-lg shadow-lg text-center max-w-md">
-          <FaCheckCircle className="text-6xl text-success-500 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">Payment Successful!</h2>
-          <p className="text-gray-600 mb-4">Your booking has been confirmed.</p>
-          <p className="text-sm text-gray-500">Redirecting to profile...</p>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-blue-50">
+        <div className="bg-white p-8 rounded-2xl shadow-2xl text-center max-w-md">
+          <div className="bg-green-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+            <FaCheckCircle className="text-5xl text-green-600" />
+          </div>
+          <h2 className="text-3xl font-bold text-gray-800 mb-3">Payment Successful!</h2>
+          <p className="text-gray-600 mb-6">Your booking has been confirmed successfully.</p>
+          <p className="text-lg font-semibold text-green-600 mb-8">
+            Amount Paid: ₹{calculateAmount().toLocaleString('en-IN')}
+          </p>
+          <div className="space-y-3">
+            <button
+              onClick={() => navigate('/')}
+              className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-200"
+            >
+              Go to Home
+            </button>
+            <button
+              onClick={() => navigate('/profile')}
+              className="w-full bg-gray-100 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-all duration-200"
+            >
+              View My Profile
+            </button>
+            <button
+              onClick={() => navigate(`/listing/${listingId}`)}
+              className="w-full border-2 border-blue-600 text-blue-600 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-all duration-200"
+            >
+              Back to Property
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -66,7 +90,7 @@ export default function Payment() {
                 <img src={listing.imageUrls[0]} alt={listing.name} className="w-full h-48 object-cover rounded-lg mb-4" />
                 <h3 className="font-bold text-lg">{listing.name}</h3>
                 <p className="text-gray-600 mb-2">{listing.address}</p>
-                <p className="text-2xl font-bold text-primary-600">${listing.regularPrice.toLocaleString()}</p>
+                <p className="text-2xl font-bold text-blue-600">₹{listing.regularPrice.toLocaleString('en-IN')}</p>
               </div>
             )}
           </div>
@@ -90,7 +114,7 @@ export default function Payment() {
                   />
                   <div className="flex-1">
                     <p className="font-medium">Token Amount (10%)</p>
-                    <p className="text-sm text-gray-500">${listing && (listing.regularPrice * 0.1).toLocaleString()}</p>
+                    <p className="text-sm text-gray-500">₹{listing && (listing.regularPrice * 0.1).toLocaleString('en-IN')}</p>
                   </div>
                 </label>
                 <label className="flex items-center p-4 border-2 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
@@ -104,7 +128,7 @@ export default function Payment() {
                   />
                   <div className="flex-1">
                     <p className="font-medium">Booking Amount (20%)</p>
-                    <p className="text-sm text-gray-500">${listing && (listing.regularPrice * 0.2).toLocaleString()}</p>
+                    <p className="text-sm text-gray-500">₹{listing && (listing.regularPrice * 0.2).toLocaleString('en-IN')}</p>
                   </div>
                 </label>
               </div>

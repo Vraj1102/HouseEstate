@@ -236,7 +236,7 @@ export default function AdminPanel() {
                       <img src={listing.imageUrls[0]} alt={listing.name} className="w-12 h-10 rounded object-cover" />
                       <div>
                         <p className="font-medium text-gray-800">{listing.name}</p>
-                        <p className="text-sm text-gray-600">${listing.regularPrice.toLocaleString()}</p>
+                        <p className="text-sm text-gray-600">₹{listing.regularPrice.toLocaleString('en-IN')}</p>
                       </div>
                     </div>
                   ))}
@@ -278,7 +278,7 @@ export default function AdminPanel() {
                         </div>
                       </td>
                       <td className="px-6 py-4 text-gray-700">{user.email}</td>
-                      <td className="px-6 py-4 text-gray-700">{new Date(user.createdAt).toLocaleDateString()}</td>
+                      <td className="px-6 py-4 text-gray-700">{user.createdAt ? new Date(user.createdAt).toLocaleDateString('en-IN') : 'N/A'}</td>
                       <td className="px-6 py-4">
                         <div className="flex space-x-2">
                           <button
@@ -351,8 +351,8 @@ export default function AdminPanel() {
                           {listing.type}
                         </span>
                       </td>
-                      <td className="px-6 py-4 font-semibold text-gray-900">${listing.regularPrice.toLocaleString()}</td>
-                      <td className="px-6 py-4 text-gray-700">{listing.userRef?.username || 'N/A'}</td>
+                      <td className="px-6 py-4 font-semibold text-gray-900">₹{listing.regularPrice.toLocaleString('en-IN')}</td>
+                      <td className="px-6 py-4 text-gray-700">{listing.userRef?.username || listing.userRef?.email || 'Unknown'}</td>
                       <td className="px-6 py-4">
                         <div className="flex space-x-2">
                           <button
@@ -391,7 +391,7 @@ export default function AdminPanel() {
                             className="bg-yellow-100 text-yellow-700 p-2 rounded-lg hover:bg-yellow-200 transition-colors"
                             title="Quick Price Update"
                           >
-                            $
+                            ₹
                           </button>
                           <button
                             onClick={() => deleteListing(listing._id)}
@@ -739,14 +739,15 @@ export default function AdminPanel() {
                       <div className="grid grid-cols-2 gap-4 text-sm">
                         <div><strong>Address:</strong> {editingItem.address}</div>
                         <div><strong>Type:</strong> {editingItem.type}</div>
-                        <div><strong>Price:</strong> ${editingItem.regularPrice?.toLocaleString()}</div>
-                        <div><strong>Discount:</strong> ${editingItem.discountPrice?.toLocaleString() || 'None'}</div>
+                        <div><strong>Price:</strong> ₹{editingItem.regularPrice?.toLocaleString('en-IN')}</div>
+                        <div><strong>Discount:</strong> ₹{editingItem.discountPrice?.toLocaleString('en-IN') || 'None'}</div>
                         <div><strong>Bedrooms:</strong> {editingItem.bedrooms}</div>
                         <div><strong>Bathrooms:</strong> {editingItem.bathrooms}</div>
                         <div><strong>Furnished:</strong> {editingItem.furnished ? 'Yes' : 'No'}</div>
                         <div><strong>Parking:</strong> {editingItem.parking ? 'Yes' : 'No'}</div>
                         <div><strong>Special Offer:</strong> {editingItem.offer ? 'Yes' : 'No'}</div>
-                        <div><strong>Owner:</strong> {editingItem.userRef?.username || 'N/A'}</div>
+                        <div><strong>Owner:</strong> {editingItem.userRef?.username || editingItem.userRef?.email || 'Unknown'}</div>
+                        <div><strong>Owner Email:</strong> {editingItem.userRef?.email || 'N/A'}</div>
                       </div>
                       
                       {/* Quick Actions */}

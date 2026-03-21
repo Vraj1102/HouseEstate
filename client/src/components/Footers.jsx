@@ -40,10 +40,18 @@ export default function Footers() {
           <div className="space-y-4">
             <h3 className="font-semibold text-lg text-accent-500">Services</h3>
             <div className="space-y-2">
-              <p className="text-gray-300 text-sm hover:text-white transition-colors cursor-pointer">Property Sales</p>
-              <p className="text-gray-300 text-sm hover:text-white transition-colors cursor-pointer">Property Rentals</p>
-              <p className="text-gray-300 text-sm hover:text-white transition-colors cursor-pointer">Property Management</p>
-              <p className="text-gray-300 text-sm hover:text-white transition-colors cursor-pointer">Investment Consulting</p>
+              <Link to="/search?type=sale" className="block text-gray-300 text-sm hover:text-accent-500 transition-colors">
+                Property Sales - Buy your dream home
+              </Link>
+              <Link to="/search?type=rent" className="block text-gray-300 text-sm hover:text-accent-500 transition-colors">
+                Property Rentals - Find perfect rental
+              </Link>
+              <Link to="/profile" className="block text-gray-300 text-sm hover:text-accent-500 transition-colors">
+                Property Management - Manage listings
+              </Link>
+              <Link to="/about" className="block text-gray-300 text-sm hover:text-accent-500 transition-colors">
+                Investment Consulting - Expert advice
+              </Link>
             </div>
           </div>
 
@@ -92,7 +100,7 @@ export default function Footers() {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <Footer.Copyright 
             href="#" 
-            by="HouseEstate" 
+            by="VR Group" 
             year={new Date().getFullYear()} 
             className="text-gray-300"
           />
