@@ -58,6 +58,10 @@ const listingSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    ownerName: {
+      type: String,
+      default: "",
+    },
     paymentStatus: {
       type: String,
       enum: ["available", "token_paid", "sold"],

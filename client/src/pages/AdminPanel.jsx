@@ -120,10 +120,15 @@ export default function AdminPanel() {
     setModalType(type);
     setEditingItem(item);
     if (item) {
-      setFormData(item);
+      setFormData({
+        ...item,
+        joinDate: item.createdAt ? new Date(item.createdAt).toISOString().split('T')[0] : '',
+        ownerName: item.userRef?.username || item.userRef?.email || ''
+      });
     } else {
-      setFormData(type === 'user' ? { username: '', email: '', password: '' } : 
-                 { name: '', description: '', address: '', regularPrice: '', discountPrice: '', bathrooms: 1, bedrooms: 1, furnished: false, parking: false, type: 'rent', offer: false, imageUrls: [''] });
+      setFormData(type === 'user' 
+        ? { username: '', email: '', password: '', avatar: '', joinDate: new Date().toISOString().split('T')[0] } 
+        : { name: '', description: '', address: '', regularPrice: '', discountPrice: '', bathrooms: 1, bedrooms: 1, furnished: false, parking: false, type: 'rent', offer: false, imageUrls: [''], ownerName: '' });
     }
     setShowModal(true);
   };
@@ -278,7 +283,7 @@ export default function AdminPanel() {
                         </div>
                       </td>
                       <td className="px-6 py-4 text-gray-700">{user.email}</td>
-                      <td className="px-6 py-4 text-gray-700">{user.createdAt ? new Date(user.createdAt).toLocaleDateString('en-IN') : 'N/A'}</td>
+                      <td className="px-6 py-4 text-gray-700">{user.joinDate ? new Date(user.joinDate).toLocaleDateString('en-IN') : (user.createdAt ? new Date(user.createdAt).toLocaleDateString('en-IN') : 'N/A')}</td>
                       <td className="px-6 py-4">
                         <div className="flex space-x-2">
                           <button
@@ -352,7 +357,7 @@ export default function AdminPanel() {
                         </span>
                       </td>
                       <td className="px-6 py-4 font-semibold text-gray-900">₹{listing.regularPrice.toLocaleString('en-IN')}</td>
-                      <td className="px-6 py-4 text-gray-700">{listing.userRef?.username || listing.userRef?.email || 'Unknown'}</td>
+                      <td className="px-6 py-4 text-gray-700">{listing.ownerName || listing.userRef?.username || listing.userRef?.email || 'Unknown'}</td>
                       <td className="px-6 py-4">
                         <div className="flex space-x-2">
                           <button
@@ -459,6 +464,16 @@ export default function AdminPanel() {
                     onChange={(e) => setFormData({...formData, avatar: e.target.value})}
                     className="w-full p-3 border rounded-lg"
                   />
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Join Date</label>
+                    <input
+                      type="date"
+                      value={formData.joinDate || ''}
+                      onChange={(e) => setFormData({...formData, joinDate: e.target.value})}
+                      className="w-full p-3 border rounded-lg"
+                      required
+                    />
+                  </div>
                   <div className="flex space-x-3">
                     <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
                       {editingItem ? 'Update' : 'Create'}
@@ -480,6 +495,17 @@ export default function AdminPanel() {
                     className="w-full p-3 border rounded-lg"
                     required
                   />
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Property Owner</label>
+                    <input
+                      type="text"
+                      placeholder="Owner Name or Email"
+                      value={formData.ownerName || ''}
+                      onChange={(e) => setFormData({...formData, ownerName: e.target.value})}
+                      className="w-full p-3 border rounded-lg"
+                      required
+                    />
+                  </div>
                   <textarea
                     placeholder="Description"
                     value={formData.description || ''}

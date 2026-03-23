@@ -26,8 +26,12 @@ const userSchema = new mongoose.Schema(
       enum: ["user", "admin"],
       default: "user",
     },
+    joinDate: {
+      type: Date,
+      default: Date.now,
+    },
   },
-  { timestamp: true }
+  { timestamps: true }
 );
 
 const User = mongoose.model("User", userSchema);

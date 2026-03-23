@@ -1,20 +1,41 @@
-import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
+import { useLocation, useNavigationType } from 'react-router-dom';
 
 export default function ScrollToTop() {
-  const { pathname } = useLocation();
+  const location = useLocation();
+  const navigationType = useNavigationType();
+  const scrollPositions = useRef({});
+  const currentPath = useRef(location.pathname);
 
   useEffect(() => {
-    // Only scroll to top on forward navigation, not on back button
-    if (window.history.state && window.history.state.idx > 0) {
-      // This is a forward navigation
-      window.scrollTo({
-        top: 0,
-        left: 0,
-        behavior: 'instant'
-      });
+    const handleScroll = () => {
+      // Save current scroll position
+      scrollPositions.current[currentPath.current] = window.scrollY;
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    if (navigationType === 'POP') {
+      // Back/Forward button - restore saved position
+      const savedPosition = scrollPositions.current[location.pathname];
+      if (savedPosition !== undefined) {
+        // Use setTimeout to ensure DOM is ready
+        setTimeout(() => {
+          window.scrollTo(0, savedPosition);
+        }, 0);
+      } else {
+        window.scrollTo(0, 0);
+      }
+    } else {
+      // Regular navigation - scroll to top
+      window.scrollTo(0, 0);
     }
-  }, [pathname]);
+    
+    currentPath.current = location.pathname;
+  }, [location.pathname, navigationType]);
 
   return null;
 }

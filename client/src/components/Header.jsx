@@ -26,35 +26,37 @@ export default function Header() {
 
   return (
     <header className="bg-gradient-to-r from-primary-900 to-primary-800 shadow-lg">
-      <div className="flex justify-between items-center max-w-7xl mx-auto px-4 py-4">
-        {/* Logo */}
-        <Link to="/" className="flex items-center space-x-2 group">
-          <FaHome className="text-2xl text-accent-500 group-hover:text-accent-600 transition-colors" />
-          <h1 className="font-bold text-xl sm:text-2xl">
-            <span className="text-white">House</span>
-            <span className="text-accent-500">Estate</span>
-          </h1>
-        </Link>
+      <div className="w-full">
+        <div className="max-w-7xl mx-auto px-4 py-4">
+          <div className="grid grid-cols-3 items-center gap-4">
+            {/* Logo - Far Left */}
+            <Link to="/" className="flex items-center space-x-2 group justify-start">
+              <FaHome className="text-2xl text-accent-500 group-hover:text-accent-600 transition-colors" />
+              <h1 className="font-bold text-xl sm:text-2xl whitespace-nowrap">
+                <span className="text-white">House</span>
+                <span className="text-accent-500">Estate</span>
+              </h1>
+            </Link>
 
-        {/* Search Bar */}
-        <form
-          onSubmit={handleSubmit}
-          className="hidden md:flex bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 items-center hover:bg-white/20 transition-all"
-        >
-          <input
-            type="text"
-            placeholder="Search properties..."
-            className="bg-transparent focus:outline-none w-64 text-white placeholder-white/70"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <button type="submit" className="ml-2">
-            <FaSearch className="text-white hover:text-accent-500 transition-colors" />
-          </button>
-        </form>
+            {/* Search Bar - Center */}
+            <form
+              onSubmit={handleSubmit}
+              className="hidden md:flex bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 items-center hover:bg-white/20 transition-all justify-center"
+            >
+              <input
+                type="text"
+                placeholder="Search properties..."
+                className="bg-transparent focus:outline-none w-full text-white placeholder-white/70"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <button type="submit" className="ml-2 flex-shrink-0">
+                <FaSearch className="text-white hover:text-accent-500 transition-colors" />
+              </button>
+            </form>
 
-        {/* Navigation */}
-        <nav className="flex items-center space-x-6">
+            {/* Navigation - Far Right */}
+            <nav className="flex items-center space-x-4 lg:space-x-6 justify-end">
           <Link to="/" className="hidden sm:flex items-center space-x-1 text-white hover:text-accent-500 transition-colors font-medium">
             <FaHome className="text-sm" />
             <span>Home</span>
@@ -86,7 +88,9 @@ export default function Header() {
               </div>
             )}
           </Link>
-        </nav>
+            </nav>
+          </div>
+        </div>
       </div>
       
       {/* Mobile Search */}
