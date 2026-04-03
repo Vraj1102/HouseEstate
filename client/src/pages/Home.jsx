@@ -27,7 +27,8 @@ export default function Home() {
   useEffect(() => {
     const fetchOfferListings = async () => {
       try {
-        const res = await fetch(`/api/listing/get?offer=true&limit=4`);
+        // Only fetch sale properties with offers (not rent)
+        const res = await fetch(`/api/listing/get?offer=true&type=sale&limit=4`);
         const data = await res.json();
         setOfferListings(data);
         fetchRentListings();

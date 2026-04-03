@@ -100,7 +100,28 @@ export const getListing = async (req, res, next) => {
 
 export const createListing = async (req, res, next) => {
   try {
-    const listing = await Listing.create(req.body);
+    const { ownerName, ...listingData } = req.body;
+    
+    // Find user by username or email
+    let user = null;
+    if (ownerName) {
+      user = await User.findOne({
+        $or: [
+          { username: ownerName },
+          { email: ownerName }
+        ]
+      });
+    }
+    
+    // If no user found, use admin's ID
+    const userRef = user ? user._id : req.user.id;
+    
+    // For rent properties, ensure no offers
+    const finalData = listingData.type === 'rent'
+      ? { ...listingData, userRef, offer: false, discountPrice: 0 }
+      : { ...listingData, userRef };
+    
+    const listing = await Listing.create(finalData);
     res.status(201).json(listing);
   } catch (err) {
     next(err);
@@ -109,9 +130,16 @@ export const createListing = async (req, res, next) => {
 
 export const updateListing = async (req, res, next) => {
   try {
+    const { ownerName, ...listingData } = req.body;
+    
+    // For rent properties, ensure no offers
+    const finalData = listingData.type === 'rent'
+      ? { ...listingData, offer: false, discountPrice: 0 }
+      : listingData;
+    
     const listing = await Listing.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      finalData,
       { new: true }
     );
     res.status(200).json(listing);

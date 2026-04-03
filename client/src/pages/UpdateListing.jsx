@@ -145,17 +145,24 @@ export default function CreateListing() {
       if (formData.imageUrls.length < 1)
         return setError("You must Upload at laast one Image");
 
-      if (+formData.regularPrice < +formData.discountPrice)
+      if (formData.type === 'sale' && +formData.regularPrice < +formData.discountPrice)
         return setError("Discount Price must be Lower than Regular Price");
+      
       setLoading(true);
       setError(false);
+      
+      // For rent properties, remove offer and set discountPrice to 0
+      const submitData = formData.type === 'rent' 
+        ? { ...formData, offer: false, discountPrice: 0 }
+        : formData;
+      
       const res = await fetch(`/api/listing/update/${params.listingId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          ...formData,
+          ...submitData,
           userRef: currentUser._id,
         }),
       });
@@ -258,16 +265,18 @@ export default function CreateListing() {
               />
               <span>Furnished</span>
             </div>
-            <div className="flex gap-2">
-              <input
-                type="checkbox"
-                id="offer"
-                className="w-5"
-                onChange={handleChange}
-                checked={formData.offer}
-              />
-              <span>Offer</span>
-            </div>
+            {formData.type === 'sale' && (
+              <div className="flex gap-2">
+                <input
+                  type="checkbox"
+                  id="offer"
+                  className="w-5"
+                  onChange={handleChange}
+                  checked={formData.offer}
+                />
+                <span>Offer</span>
+              </div>
+            )}
           </div>
           <div className="flex flex-wrap gap-6">
             <div className="flex items-center gap-2">
@@ -308,12 +317,12 @@ export default function CreateListing() {
                 value={formData.regularPrice}
               />
               <div className="flex flex-col items-center">
-                <p>Regular Price</p>
-                <span className="text-xs">(₹ / month)</span>
+                <p>{formData.type === 'rent' ? 'Rent Price' : 'Regular Price'}</p>
+                {formData.type === 'rent' && <span className="text-xs">(₹ / month)</span>}
               </div>
             </div>
 
-            {formData.offer && (
+            {formData.offer && formData.type === 'sale' && (
               <div className="flex items-center gap-2">
                 <input
                   type="number"
@@ -327,7 +336,7 @@ export default function CreateListing() {
                 />
                 <div className="flex flex-col items-center">
                   <p>Discounted Price</p>
-                  <span className="text-xs">(₹ / month)</span>
+                  <span className="text-xs text-red-600">(Final price after discount)</span>
                 </div>
               </div>
             )}

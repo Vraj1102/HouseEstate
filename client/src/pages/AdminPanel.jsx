@@ -521,23 +521,61 @@ export default function AdminPanel() {
                     className="w-full p-3 border rounded-lg"
                     required
                   />
-                  <div className="grid grid-cols-2 gap-4">
-                    <input
-                      type="number"
-                      placeholder="Regular Price"
-                      value={formData.regularPrice || ''}
-                      onChange={(e) => setFormData({...formData, regularPrice: e.target.value})}
+                  
+                  {/* Property Type Selection */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Property Type</label>
+                    <select
+                      value={formData.type || 'rent'}
+                      onChange={(e) => {
+                        const newType = e.target.value;
+                        setFormData({
+                          ...formData, 
+                          type: newType,
+                          // Reset offer and discount for rent properties
+                          offer: newType === 'rent' ? false : formData.offer,
+                          discountPrice: newType === 'rent' ? 0 : formData.discountPrice
+                        });
+                      }}
                       className="w-full p-3 border rounded-lg"
-                      required
-                    />
-                    <input
-                      type="number"
-                      placeholder="Discount Price"
-                      value={formData.discountPrice || ''}
-                      onChange={(e) => setFormData({...formData, discountPrice: e.target.value})}
-                      className="w-full p-3 border rounded-lg"
-                    />
+                    >
+                      <option value="rent">Rent</option>
+                      <option value="sale">Sale</option>
+                    </select>
                   </div>
+
+                  {/* Price Fields */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        {formData.type === 'rent' ? 'Rent Price (₹/month)' : 'Regular Price (₹)'}
+                      </label>
+                      <input
+                        type="number"
+                        placeholder={formData.type === 'rent' ? 'Monthly Rent' : 'Regular Price'}
+                        value={formData.regularPrice || ''}
+                        onChange={(e) => setFormData({...formData, regularPrice: e.target.value})}
+                        className="w-full p-3 border rounded-lg"
+                        required
+                      />
+                    </div>
+                    {formData.type === 'sale' && formData.offer && (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Discounted Price (₹)
+                          <span className="text-xs text-red-600 block">(Final price after discount)</span>
+                        </label>
+                        <input
+                          type="number"
+                          placeholder="Discounted Price"
+                          value={formData.discountPrice || ''}
+                          onChange={(e) => setFormData({...formData, discountPrice: e.target.value})}
+                          className="w-full p-3 border rounded-lg"
+                        />
+                      </div>
+                    )}
+                  </div>
+                  
                   <div className="grid grid-cols-2 gap-4">
                     <input
                       type="number"
@@ -556,14 +594,6 @@ export default function AdminPanel() {
                       min="1"
                     />
                   </div>
-                  <select
-                    value={formData.type || 'rent'}
-                    onChange={(e) => setFormData({...formData, type: e.target.value})}
-                    className="w-full p-3 border rounded-lg"
-                  >
-                    <option value="rent">Rent</option>
-                    <option value="sale">Sale</option>
-                  </select>
                   
                   {/* Dynamic Image Management */}
                   <div className="space-y-3">
@@ -630,15 +660,18 @@ export default function AdminPanel() {
                     </label>
                   </div>
                   
-                  <label className="flex items-center space-x-2">
-                    <input
-                      type="checkbox"
-                      checked={formData.offer || false}
-                      onChange={(e) => setFormData({...formData, offer: e.target.checked})}
-                      className="rounded"
-                    />
-                    <span>Special Offer</span>
-                  </label>
+                  {/* Only show offer checkbox for sale properties */}
+                  {formData.type === 'sale' && (
+                    <label className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        checked={formData.offer || false}
+                        onChange={(e) => setFormData({...formData, offer: e.target.checked})}
+                        className="rounded"
+                      />
+                      <span>Special Offer</span>
+                    </label>
+                  )}
 
                   {/* Real-time Update Buttons */}
                   <div className="flex space-x-3">

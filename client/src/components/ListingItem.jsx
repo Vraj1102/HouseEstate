@@ -66,7 +66,7 @@ export default function ListingItem({ listing }) {
           </div>
           
           {/* Offer Badge */}
-          {listing.offer && (
+          {listing.offer && listing.type === 'sale' && (
             <div className="absolute top-3 left-3 bg-gradient-to-r from-orange-500 to-red-500 text-white px-3 py-1 rounded-full text-xs font-semibold flex items-center space-x-1">
               <FaTag className="text-xs" />
               <span>Special Offer</span>
@@ -102,12 +102,14 @@ export default function ListingItem({ listing }) {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-2xl font-bold text-gray-800">
-                ₹{listing.offer
-                  ? listing.discountPrice.toLocaleString('en-IN')
-                  : listing.regularPrice.toLocaleString('en-IN')}
+                ₹{listing.type === 'rent'
+                  ? listing.regularPrice.toLocaleString('en-IN')
+                  : (listing.offer
+                    ? (listing.discountPrice < listing.regularPrice ? listing.discountPrice : listing.regularPrice - listing.discountPrice).toLocaleString('en-IN')
+                    : listing.regularPrice.toLocaleString('en-IN'))}
                 {listing.type === "rent" && <span className="text-sm font-normal text-gray-600">/month</span>}
               </p>
-              {listing.offer && (
+              {listing.offer && listing.type === 'sale' && (
                 <p className="text-sm text-gray-500 line-through">
                   ₹{listing.regularPrice.toLocaleString('en-IN')}
                 </p>
