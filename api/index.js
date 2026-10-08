@@ -32,6 +32,10 @@ app.use("/api/listing", listingRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/payment", paymentRouter);
 
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok" });
+});
+
 app.use(express.static(path.join(__dirname, "/client/dist")));
 
 app.get("*", (req, res) => {

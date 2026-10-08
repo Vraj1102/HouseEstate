@@ -8,7 +8,9 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
+client/node_modules/
 dist
+client/dist/
 dist-ssr
 *.local
 
@@ -32,3 +34,6 @@ client/.env.local
 #api Never commit these files 
 api/serviceAccountKey.json
 client/src/firebase.js
+*.pem
+
+ansible/inventory.ini
