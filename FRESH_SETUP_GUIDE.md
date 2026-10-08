@@ -133,13 +133,13 @@ PORT=3000
 
 ```env
 # For MongoDB Atlas
-MONGO=mongodb+srv://vraj:yourPassword123@cluster0.abc123.mongodb.net/houseestate?retryWrites=true&w=majority
+MONGO=mongodb+srv://********************retryWrites=true&w=majority
 
 # For Local MongoDB
-# MONGO=mongodb://localhost:27017/houseestate
+# MONGO=mongodb://***************
 
 # JWT Secret (generate a random string)
-JWT_SECRET=my-super-secret-jwt-key-12345-abcdef
+JWT_SECRET=my-super-secret-jwt-key-*********
 
 PORT=3000
 ```
