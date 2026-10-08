@@ -1,0 +1,30 @@
+---
+- name: Deploy HouseEstate
+  hosts: web
+  become: true
+
+  tasks:
+
+    - name: Create HouseEstate deployment directory
+      ansible.builtin.file:
+        path: /opt/houseestate
+        state: directory
+        owner: ubuntu
+        group: ubuntu
+        mode: "0755"
+
+    - name: Check Docker service
+      ansible.builtin.systemd:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Check NGINX service
+      ansible.builtin.systemd:
+        name: nginx
+        state: started
+        enabled: true
+
+    - name: Show deployment message
+      ansible.builtin.debug:
+        msg: "EC2 server is ready for HouseEstate deployment"
