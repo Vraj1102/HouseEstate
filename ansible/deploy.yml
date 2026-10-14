@@ -1,10 +1,14 @@
+
 ---
 - name: Deploy HouseEstate
   hosts: web
   become: true
 
-  tasks:
+  vars:
+    image_name: ghcr.io/vraj1102/houseestate
+    image_tag: "{{ lookup('env', 'IMAGE_TAG') | default('latest', true) }}"
 
+  tasks:
     - name: Create HouseEstate deployment directory
       ansible.builtin.file:
         path: /opt/houseestate
@@ -13,18 +17,55 @@
         group: ubuntu
         mode: "0755"
 
-    - name: Check Docker service
+    - name: Ensure Docker is running
       ansible.builtin.systemd:
         name: docker
         state: started
         enabled: true
 
-    - name: Check NGINX service
+    - name: Ensure NGINX is running
       ansible.builtin.systemd:
         name: nginx
         state: started
         enabled: true
 
-    - name: Show deployment message
-      ansible.builtin.debug:
-        msg: "EC2 server is ready for HouseEstate deployment"
+    - name: Log in to GHCR
+      ansible.builtin.command:
+        argv:
+          - docker
+          - login
+          - ghcr.io
+          - --username
+          - "{{ lookup('env', 'GHCR_USERNAME') }}"
+          - --password-stdin
+        stdin: "{{ lookup('env', 'GHCR_READ_TOKEN') }}"
+      no_log: true
+
+    - name: Pull the requested HouseEstate image
+      ansible.builtin.command:
+        argv:
+          - docker
+          - pull
+          - "{{ image_name }}:{{ image_tag }}"
+
+    - name: Replace HouseEstate container
+      ansible.builtin.shell:
+        cmd: |
+          docker rm -f houseestate 2>/dev/null || true
+          docker run -d \
+            --name houseestate \
+            --restart unless-stopped \
+            --env-file /opt/houseestate/.env \
+            -p 127.0.0.1:3000:3000 \
+            "{{ image_name }}:{{ image_tag }}"
+        executable: /bin/bash
+
+    - name: Wait for HouseEstate health endpoint
+      ansible.builtin.uri:
+        url: http://127.0.0.1:3000/health
+        method: GET
+        status_code: 200
+      register: health_check
+      retries: 10
+      delay: 3
+      until: health_check.status == 200
